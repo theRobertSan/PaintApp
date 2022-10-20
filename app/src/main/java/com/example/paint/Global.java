@@ -1,7 +1,6 @@
 package com.example.paint;
 
 import android.app.Application;
-import android.content.res.Resources;
 
 import java.util.HashMap;
 

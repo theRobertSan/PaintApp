@@ -9,7 +9,7 @@
 
     <fragment
         android:id="@+id/canvasFragment"
-        android:name="com.example.paint.CanvasFragment"
+        android:name="com.example.paint.Canvas"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginStart="16dp"
