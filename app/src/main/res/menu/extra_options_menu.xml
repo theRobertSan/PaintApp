@@ -4,4 +4,7 @@
         android:title="@string/settings_button"/>
     <item android:id="@+id/about_option"
         android:title="@string/about_button"/>
+
+    <item android:id="@+id/maps_option"
+        android:title="@string/maps_option"/>
 </menu>

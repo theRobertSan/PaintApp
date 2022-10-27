@@ -10,6 +10,8 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 
+import androidx.core.graphics.ColorUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -21,6 +23,7 @@ public class PaintCanvas extends View implements View.OnTouchListener {
     ColoredPath currentColoredPath = new ColoredPath(new Paint(), new Path());
     private int currentColor = Color.WHITE;
     private int backGroundColor = Color.rgb(255, 114, 114);
+    private int brightBackGroundColor = ColorUtils.blendARGB(backGroundColor, Color.WHITE, 0.5f);
     private GestureDetector mGestureDetector;
 
     public PaintCanvas(Context context, AttributeSet attrs) {
@@ -94,12 +97,22 @@ public class PaintCanvas extends View implements View.OnTouchListener {
     public void changeBackground() {
         Random r = new Random();
         backGroundColor = Color.rgb(r.nextInt(256), r.nextInt(256), r.nextInt(256));
+        brightBackGroundColor = ColorUtils.blendARGB(backGroundColor, Color.WHITE, 0.5f);
+        setBackgroundColor(backGroundColor);
+    }
+
+    public void brightenUpBackground() {
+        setBackgroundColor(brightBackGroundColor);
+    }
+
+    public void brightenDownBackground() {
         setBackgroundColor(backGroundColor);
     }
 
     public void erase() {
         paths = new ArrayList<ColoredPath>();
         newColor(currentColor);
+        invalidate();
     }
 
     private void initPaint(int color) {

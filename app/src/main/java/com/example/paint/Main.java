@@ -1,14 +1,14 @@
 package com.example.paint;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 public class Main extends AppCompatActivity {
 
@@ -17,7 +17,7 @@ public class Main extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        int backgroundColor = ((Global)getApplicationContext()).getBackgroundColor();
+        int backgroundColor = ((Global) getApplicationContext()).getBackgroundColor();
 
         ConstraintLayout mainLayout = findViewById(R.id.main_layout);
         mainLayout.setBackgroundResource(backgroundColor);
@@ -41,6 +41,9 @@ public class Main extends AppCompatActivity {
             case R.id.about_option:
                 showAbout();
                 return true;
+            case R.id.maps_option:
+                showMaps();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -53,6 +56,11 @@ public class Main extends AppCompatActivity {
 
     public void showAbout() {
         Intent intent = new Intent(this, About.class);
+        startActivity(intent);
+    }
+
+    public void showMaps() {
+        Intent intent = new Intent(this, Maps.class);
         startActivity(intent);
     }
 }
