@@ -53,8 +53,8 @@ public class Canvas extends Fragment {
                     currentAcceleration = (float) Math.sqrt(x * x + y * y + z * z);
                     float delta = currentAcceleration - lastAcceleration;
                     acceleration = currentAcceleration * 0.9f + delta;
-
-                    if (acceleration > 18) {
+                    // System.out.println(acceleration);
+                    if (acceleration > 25) {
                         paintCanvas.erase();
                     }
 
@@ -90,32 +90,33 @@ public class Canvas extends Fragment {
         sensorManager.registerListener(lightEventListener, lightSensor, SensorManager.SENSOR_DELAY_NORMAL);
 
         // Manage axis
-        Sensor axisSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
-        SensorEventListener axisEventListener = new SensorEventListener() {
-            @Override
-            public void onSensorChanged(SensorEvent sensorEvent) {
-                float x = sensorEvent.values[0];
-                float y = sensorEvent.values[1];
-                float z = sensorEvent.values[2];
-
-                if (!laying && y < LAYING_THRESHOLD && y > -LAYING_THRESHOLD) {
-                    laying = true;
-                    paintCanvas.changeBackground();
-                } else if (y > LAYING_THRESHOLD || y < -LAYING_THRESHOLD) {
-                    laying = false;
-                }
-            }
-
-            @Override
-            public void onAccuracyChanged(Sensor sensor, int i) {
-            }
-        };
-        sensorManager.registerListener(axisEventListener, axisSensor, SensorManager.SENSOR_DELAY_NORMAL);
+//        Sensor axisSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
+//        SensorEventListener axisEventListener = new SensorEventListener() {
+//            @Override
+//            public void onSensorChanged(SensorEvent sensorEvent) {
+//                float x = sensorEvent.values[0];
+//                float y = sensorEvent.values[1];
+//                float z = sensorEvent.values[2];
+//
+//                if (!laying && y < LAYING_THRESHOLD && y > -LAYING_THRESHOLD) {
+//                    laying = true;
+//                    paintCanvas.changeBackground();
+//                } else if (y > LAYING_THRESHOLD || y < -LAYING_THRESHOLD) {
+//                    laying = false;
+//                }
+//            }
+//
+//            @Override
+//            public void onAccuracyChanged(Sensor sensor, int i) {
+//            }
+//        };
+//        sensorManager.registerListener(axisEventListener, axisSensor, SensorManager.SENSOR_DELAY_NORMAL);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
 
         viewModel = new ViewModelProvider(requireActivity()).get(BrushViewModel.class);
 
@@ -128,11 +129,14 @@ public class Canvas extends Fragment {
         if (viewModel.getPaintCanvas().getValue() == null) {
             paintCanvas = new PaintCanvas(getContext(), null, mGestureDetector);
             viewModel.setPaintCanvas(paintCanvas);
+            System.out.println("TEST1");
         } else {
             paintCanvas = viewModel.getPaintCanvas().getValue();
-
+            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!");
+            System.out.println(paintCanvas.paths);
             // Delete previous parent's reference to paintCanvas
             ((ViewGroup) paintCanvas.getParent()).removeView(paintCanvas);
+            System.out.println("TEST2");
         }
         mGestureListener.setCanvas(paintCanvas);
 

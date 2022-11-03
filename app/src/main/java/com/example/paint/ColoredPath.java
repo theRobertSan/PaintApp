@@ -1,13 +1,12 @@
 package com.example.paint;
 
 import android.graphics.Paint;
-import android.graphics.Path;
 
 public class ColoredPath {
     private Paint paint;
-    private Path path;
+    private CustomPath path;
 
-    public ColoredPath(Paint paint, Path path) {
+    public ColoredPath(Paint paint, CustomPath path) {
         this.paint = paint;
         this.path = path;
     }
@@ -16,7 +15,7 @@ public class ColoredPath {
         return paint;
     }
 
-    public Path getPath() {
+    public CustomPath getPath() {
         return path;
     }
 }

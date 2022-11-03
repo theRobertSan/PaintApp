@@ -12,15 +12,17 @@ import android.view.View;
 
 import androidx.core.graphics.ColorUtils;
 
+import com.google.gson.Gson;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 public class PaintCanvas extends View implements View.OnTouchListener {
 
-    private List<ColoredPath> paths = new ArrayList<>();
+    public List<ColoredPath> paths = new ArrayList<>();
 
-    ColoredPath currentColoredPath = new ColoredPath(new Paint(), new Path());
+    ColoredPath currentColoredPath = new ColoredPath(new Paint(), new CustomPath());
     private int currentColor = Color.WHITE;
     private int backGroundColor = Color.rgb(255, 114, 114);
     private int brightBackGroundColor = ColorUtils.blendARGB(backGroundColor, Color.WHITE, 0.5f);
@@ -43,7 +45,8 @@ public class PaintCanvas extends View implements View.OnTouchListener {
 
     @Override
     protected void onDraw(Canvas canvas) {
-
+        System.out.println("ABOUT TO DRAW!");
+        System.out.println(paths);
         for (ColoredPath currentPath : paths) {
             canvas.drawPath(currentPath.getPath(), currentPath.getPaint());
         }
@@ -68,7 +71,7 @@ public class PaintCanvas extends View implements View.OnTouchListener {
         float eventY = event.getY();
 
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            currentColoredPath = new ColoredPath(new Paint(), new Path());
+            currentColoredPath = new ColoredPath(new Paint(), new CustomPath());
             initPaint(currentColor);
             paths.add(currentColoredPath);
         }
@@ -110,6 +113,7 @@ public class PaintCanvas extends View implements View.OnTouchListener {
     }
 
     public void erase() {
+        System.out.println("ERASING");
         paths = new ArrayList<ColoredPath>();
         newColor(currentColor);
         invalidate();
@@ -134,6 +138,66 @@ public class PaintCanvas extends View implements View.OnTouchListener {
         }
         currentColoredPath = paths.remove(paths.size() - 1);
         System.out.println(paths);
+        invalidate();
+    }
+
+    public CanvasDataObject createDataObject() {
+
+        Gson gson = new Gson();
+
+        List<ArrayList<Action>> pathsToSave = new ArrayList<>();
+        List<Integer> colorToSave = new ArrayList<>();
+        for (ColoredPath p : paths) {
+            String jsonPath = gson.toJson(p.getPath());
+            System.out.println(jsonPath);
+
+            pathsToSave.add(p.getPath().actions);
+            colorToSave.add(p.getPaint().getColor());
+        }
+
+        CanvasDataObject objectToSave = new CanvasDataObject(backGroundColor, pathsToSave, colorToSave);
+
+        return objectToSave;
+    }
+
+    public void loadDataObject(CanvasDataObject storedObject) {
+
+        Gson gson = new Gson();
+
+        backGroundColor = storedObject.getBackgroundColor();
+        brightBackGroundColor = ColorUtils.blendARGB(backGroundColor, Color.WHITE, 0.5f);
+        setBackgroundColor(backGroundColor);
+
+        List<ArrayList<Action>> pathsToSave = storedObject.getPaths();
+        List<Integer> colorToSave = storedObject.getColors();
+
+        System.out.println(pathsToSave);
+        System.out.println(colorToSave);
+
+        // Reset
+        paths = new ArrayList<>();
+
+        for (int i = 0; i < pathsToSave.size(); i++) {
+//            CustomPath path = gson.fromJson(pathsToSave.get(i), ArrayList<CustomPath.ActionMove>.class);
+            ArrayList<Action> pathData = pathsToSave.get(i);
+            CustomPath path = new CustomPath();
+            path.actions = pathData;
+            path.drawThisPath();
+
+            Paint paint = new Paint();
+            paint.setAntiAlias(true);
+            paint.setStrokeWidth(20f);
+            paint.setColor(colorToSave.get(i));
+            paint.setStyle(Paint.Style.STROKE);
+            paint.setStrokeJoin(Paint.Join.ROUND);
+
+            paths.add(new ColoredPath(paint, path));
+        }
+
+        System.out.println(paths);
+        newColor(currentColor);
+        currentColoredPath = new ColoredPath(new Paint(), new CustomPath());
+
         invalidate();
     }
 

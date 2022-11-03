@@ -21,6 +21,7 @@ public class Main extends AppCompatActivity {
 
         ConstraintLayout mainLayout = findViewById(R.id.main_layout);
         mainLayout.setBackgroundResource(backgroundColor);
+
     }
 
     // Add Options Menu
